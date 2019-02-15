@@ -1,0 +1,76 @@
+---
+  - name: Install epel-release
+    yum:
+      state: present
+      name: "{{item}}"
+
+    with_items:
+      - epel-release
+
+  - name: Update
+    yum: 
+      name: '*'
+      state: latest
+
+  - name: install repo mysql
+    yum:
+      name: http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+      state: present
+      update_cache: yes
+
+  - name: Update
+    yum: 
+      name: '*'
+      state: latest
+
+  - name: Install mysql-server
+    yum:
+      state: present
+      name: "{{item}}"
+
+    with_items:
+      - mysql-server
+      - mysql
+      
+
+  - name: starting mysql
+    service:
+      name: mysqld
+      state: started 
+
+  - name: Install python-pip
+    yum: 
+      state: present
+      name: "{{item}}"
+      
+    with_items:
+      - python-pip
+  
+  - pip:
+      name: pymysql
+  
+  - mysql_user:
+      name: ''
+      host: localhost
+      state: absent
+
+  - mysql_user:
+      name: ''
+      host_all: yes
+      state: absent
+
+  - mysql_user:
+      name: "{{ db_user_name }}"
+      password: "{{ db_password }}"
+      priv: '*.*:ALL,GRANT'
+      state: present       
+    
+  - name: restarting mysql
+    service:
+      name: mysqld
+      state: restarted 
+
+  - name: Create a new database with name 'zabbix'
+    mysql_db:
+      name: "{{ db_name }}"
+      state: present

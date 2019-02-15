@@ -1,0 +1,7 @@
+---
+  - hosts: webserver
+    roles:
+      - mysql
+      - nginx
+      - Zabbix-Server
+    become: yes

@@ -1,0 +1,4 @@
+---
+db_user_name: zabbix
+db_password: zabbix
+db_name: zabbix
