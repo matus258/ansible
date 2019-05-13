@@ -1,0 +1,2 @@
+[webserver]
+3.87.225.205 ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file=/home/matus/Downloads/ZabbixAgent.pem ansible_user=ubuntu

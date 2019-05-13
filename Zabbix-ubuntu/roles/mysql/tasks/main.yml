@@ -1,0 +1,52 @@
+---
+  - name: Update all packages to the latest version
+    apt:
+      upgrade: dist
+
+  - name: Install mysql-server
+    apt:
+      state: present
+      name: "{{item}}"
+
+    with_items:
+      - mysql-server
+
+
+  - name: Install python3-pip
+    yum: 
+      state: present
+      name: python3-pip
+  
+  - pip:
+      name: pymysql
+
+  - name: edit my.cnf
+    template: 
+      src: "my.cnf.j2"
+      dest: "/root/.my.cnf"
+      owner: root
+      mode: 0600
+    become: yes
+
+  - name: restarting mysql
+    service:
+      name: mysql
+      state: restarted 
+
+  - mysql_user:
+      name: root
+      password: zabbix
+      priv: '*.*:ALL,GRANT'
+      state: present     
+      host: 'localhost'
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+    
+  - name: restarting mysql
+    service:
+      name: mysql
+      state: restarted 
+
+  - name: Create a new database with name 'zabbix'
+    mysql_db:
+      name: "{{ db_name }}"
+      state: present

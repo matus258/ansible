@@ -1,22 +1,16 @@
 ---
-  - name: Install repo zabbix
-    yum:
-      state: present
-      name: https://repo.zabbix.com/zabbix/4.0/rhel/7/x86_64/zabbix-release-4.0-1.el7.noarch.rpm
-      update_cache: yes
-        
-  - name: pre requisito
-    shell: >
-      yum-config-manager --enable rhel-7-server-opcional-rpms
+  - name: Install a .deb package from the internet.
+    apt:
+      deb: https://repo.zabbix.com/zabbix/4.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_4.0-2+bionic_all.deb
 
   - name: Install zabbix server - zabbix web
-    yum:
+    apt:
       state: present
       name: "{{item}}"
 
     with_items:
       - zabbix-server-mysql
-      - zabbix-web-mysql      
+      - zabbix-frontend-php      
 
   - name: importando dados
     shell: zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -u{{ db_user_name }} {{ db_name }} -p{{ db_password }}
@@ -25,10 +19,10 @@
     shell:  cp -R /usr/share/zabbix/ /usr/share/nginx/html/
 
   - name: permitindo acesso do nginx a pasta zabbix
-    shell:  chmod 0777 /usr/share/nginx/html/zabbix 
+    shell:  chmod 0777 /usr/share/nginx/html/zabbix    
 
-  - name: permitindo acesso do nginx a pasta zabbix
-    shell:  chown nginx:nginx /usr/share/nginx/html/zabbix 
+  # - name: permitindo acesso do nginx a pasta zabbix
+  #   shell:  chown nginx:nginx /usr/share/nginx/html/zabbix 
   
   - name: edit zabbix_server.conf
     template: 
@@ -45,12 +39,5 @@
       name: nginx
       state: restarted
 
-  - name: restarting php-fpm
-    service:
-      name: php-fpm
-      state: restarted    
 
-  - name: stoping firewall
-    service:
-      name: firewalld
-      state: stopped    
+    

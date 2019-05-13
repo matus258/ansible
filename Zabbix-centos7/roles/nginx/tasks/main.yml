@@ -13,17 +13,7 @@
   - name: Install php
     yum:
       state: present
-      name: "{{item}}"
-
-    with_items:
-      - php70w
-      - php70w-mbstring
-      - php70w-pear
-      - php70w-mysql
-      - php70w-gd
-      - php70w-xml
-      - php70w-bcmath
-      - php70w-fpm
+      name: ['php70w', 'php70w-mbstring', 'php70w-pear', 'php70w-mysql', 'php70w-gd', 'php70w-xml', 'php70w-bcmath', 'php70w-fpm']
 
   - name: starting php-fpm
     service:

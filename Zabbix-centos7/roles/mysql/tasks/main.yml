@@ -2,15 +2,7 @@
   - name: Install epel-release
     yum:
       state: present
-      name: "{{item}}"
-
-    with_items:
-      - epel-release
-
-  - name: Update
-    yum: 
-      name: '*'
-      state: latest
+      name: epel-release
 
   - name: install repo mysql
     yum:
@@ -18,33 +10,25 @@
       state: present
       update_cache: yes
 
-  - name: Update
-    yum: 
-      name: '*'
-      state: latest
-
   - name: Install mysql-server
     yum:
       state: present
-      name: "{{item}}"
-
-    with_items:
-      - mysql-server
-      - mysql
-      
+      name: ['mysql-server', 'mysql']
 
   - name: starting mysql
     service:
       name: mysqld
       state: started 
 
+  - name: Enable mysql
+    service:
+      name: mysqld
+      enabled: yes
+
   - name: Install python-pip
     yum: 
       state: present
-      name: "{{item}}"
-      
-    with_items:
-      - python-pip
+      name: python-pip
   
   - pip:
       name: pymysql

@@ -1,0 +1,12 @@
+---
+  - hosts: all
+    vars:
+      db_user_name: zabbix
+      db_password: zabbix
+      db_name: zabbix
+      root_db_password: root
+    roles:
+      - mysql
+      - nginx
+      - Zabbix-Server
+    become: yes
